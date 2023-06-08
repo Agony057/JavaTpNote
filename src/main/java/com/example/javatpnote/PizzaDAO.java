@@ -35,12 +35,27 @@ public class PizzaDAO {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://devbdd.iutmetz.univ-lorraine.fr:3306/agozzino3u_tpNoteJava", "agozzino3u_appli", "32222926");
 
-            PreparedStatement statement = con.prepareStatement("INSERT INTO Pizza VALUES(?,?,?);");
+            PreparedStatement statement = con.prepareStatement("INSERT INTO Pizza(nom, prix, nb_ing) VALUES(?,?,?);");
             statement.setString(1, pizza.getRecette());
             statement.setDouble(2, pizza.getPrix());
             statement.setInt(3, pizza.getNb_ing());
 
             statement.executeUpdate();
+
+            con.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void supprimerToutePizza(){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://devbdd.iutmetz.univ-lorraine.fr:3306/agozzino3u_tpNoteJava", "agozzino3u_appli", "32222926");
+
+            Statement st = con.createStatement();
+            st.executeUpdate("DELETE FROM Pizza");
 
             con.close();
 

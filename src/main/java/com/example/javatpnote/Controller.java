@@ -9,8 +9,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -40,9 +38,8 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onViderButtonClick() {
-        ObservableList<Pizza> films = tableau.getItems();
-        films.clear();
-        tableau.setItems(films);
+        tableau.getItems().clear();
+        new PizzaDAO().supprimerToutePizza();
     }
 
     @FXML
@@ -51,7 +48,9 @@ public class Controller implements Initializable {
         String prix = text_prix.getText().trim();
         String nb_ing = text_nb_ingredient.getText().trim();
 
-        ajouterPizzaDansTableau(recette, isDouble(prix), isInt(nb_ing));
+        Pizza pizza = new Pizza(recette, isDouble(prix), isInt(nb_ing));
+
+        ajouterPizzaDansTableau(pizza);
 
         text_recette.clear();
         text_prix.clear();
@@ -60,6 +59,7 @@ public class Controller implements Initializable {
     }
 
     public int isInt(String valeur){
+//        trouvé sur internet
         int res = 0;
         if (valeur.matches("^\\p{Digit}+$")){
             res = Integer.parseInt(valeur);
@@ -68,6 +68,7 @@ public class Controller implements Initializable {
     }
 
     public double isDouble(String valeur) {
+//        trouvé sur internet
         double res = 0.0;
         if (valeur.matches("^\\d+(\\.\\d+)?$")) {
             res = Double.parseDouble(valeur);
@@ -77,12 +78,14 @@ public class Controller implements Initializable {
 
 
     @FXML
-    public void ajouterPizzaDansTableau(String recette, Double prix, int nb_ing){
-        Pizza pizza = new Pizza(recette, prix, nb_ing);
+    public void ajouterPizzaDansTableau(Pizza pizza){
+//        Pizza pizza = new Pizza(recette, prix, nb_ing);
 
         ObservableList<Pizza> pizzas = tableau.getItems();
         pizzas.add(pizza);
         tableau.setItems(pizzas);
+        new PizzaDAO().ajouterPizza(pizza);
+
     }
 
     @Override
@@ -101,8 +104,5 @@ public class Controller implements Initializable {
             tableau.getItems().add(pizza);
         }
         System.out.println(pizzas);
-
-
-
     }
 }
